@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iro.js 컬러 피커</title>
+    <!-- iro.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.2/dist/iro.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #color-picker {
+            margin: 0 auto 20px;
+        }
+        .color-info {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>iro.js 컬러 피커</h1>
+        <div id="color-picker"></div>
+        <div class="color-info">
+            <p>선택한 색상: <span id="color-value">#000000</span></p >
+            <p>RGB: <span id="rgb-value">rgb(0, 0, 0)</span></p >
+            <p>HSL: <span id="hsl-value">hsl(0, 0%, 0%)</span></p >
+        </div>
+    </div>
+
+    <!-- iro.js 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.2/dist/iro.min.js"></script>
+    <script>
+        // 컬러 피커 생성
+        const colorPicker = new iro.ColorPicker('#color-picker', {
+            // 옵션 설정
+            width: 250,
+            color: "#ff0000",
+            borderWidth: 1,
+            borderColor: "#ddd",
+            layout: [
+                { 
+                    component: iro.ui.Wheel,
+                    options: {}
+                },
+                { 
+                    component: iro.ui.Slider,
+                    options: {
+                        sliderType: 'hue' // 색상 슬라이더
+                    }
+                },
+                { 
+                    component: iro.ui.Slider,
+                    options: {
+                        sliderType: 'saturation' // 채도 슬라이더
+                    }
+                },
+                { 
+                    component: iro.ui.Slider,
+                    options: {
+                        sliderType: 'value' // 명도 슬라이더
+                    }
+                }
+            ]
+        });
+
+        // 색상 변경 이벤트 리스너
+        colorPicker.on('color:change', function(color) {
+            // 선택한 색상 정보 업데이트
+            document.getElementById('color-value').textContent = color.hexString;
+            document.getElementById('rgb-value').textContent = color.rgbString;
+            document.getElementById('hsl-value').textContent = color.hslString;
+            
+            // 색상 정보 박스 배경 업데이트
+            document.querySelector('.color-info').style.backgroundColor = color.hexString;
+            // 텍스트 색상 조정 (배경에 따라 가독성 향상)
+            const textColor = color.hsl.l > 0.5 ? '#333' : '#fff';
+            document.querySelector('.color-info').style.color = textColor;
+        });
+    </script>
+</body>
+</html>
